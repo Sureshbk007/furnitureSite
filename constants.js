@@ -1,3 +1,3 @@
-const databaseName = "furnitureDB";
+const databaseName = "Ecommerce";
 
 export { databaseName };
