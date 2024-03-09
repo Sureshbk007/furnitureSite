@@ -29,7 +29,7 @@ function validate(fullname, email, contact, password) {
 }
 
 function isValidFullname(fullname) {
-  const fullnameRegex = /^[a-zA-Z]+(?:[.\s]?[a-zA-Z]+)*[.]?$/;
+  const fullnameRegex = /^[a-zA-Z]{1,30}(?:[.\s]?[a-zA-Z]{1,30})*[.]?$/;
   return fullnameRegex.test(fullname);
 }
 function isValidEmail(email) {

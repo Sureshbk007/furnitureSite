@@ -4,24 +4,24 @@ const userSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
-      required: [true, "Fullname is required"],
-      maxLength: [30, "Fullname have to be less than 30 characters"],
+      required: true,
+      maxLength: 30,
       trim: true,
     },
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: true,
       unique: true,
       lowercase: true,
     },
     contact: {
-      type: Number,
-      required: [true, "Contact is required"],
+      type: String,
+      required: true,
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
-      maxLength: [30, "Password have to be less than 30 characters"],
+      required: true,
+      maxLength: 30,
     },
   },
   { timestamps: true }
