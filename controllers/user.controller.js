@@ -1,23 +1,56 @@
 import validate from "../utils/validate.js";
-import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
+import ApiError from "../utils/ApiError.js";
+import ApiResponse from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
+import asynHandler from "../utils/asyncHandler.js";
 
-const signup = async (req, res) => {
-try {
-      const { fullName, email, contact, password } = req.body;
-      const errors = validate(fullName, email, contact, password);
-      if (errors) {
-        throw new ApiError(400, "Validation Error", errors);
-      }
-      const user = await User.create(req.body);
-      res.json(new ApiResponse(200, user))
+//generate access Token
+const generateAccessToken = async (userId) => {
+  const user = await User.findById(userId);
+  const AccessToken = await user.generateAccessToken();
+  return AccessToken;
+};
 
-} catch (error) {
-  // throw new ApiError(500, error.message)
-  console.log(error)
-  res.json({"hi":"hi"})
-}
-  }
+// Sign up controller
+const signup = asynHandler(async (req, res) => {
+  const error = validate("signup", req.body);
+  if (error) throw new ApiError(400, "fail", error);
 
-  export { signup }
+  const { email } = req.body;
+  const existEmail = await User.findOne({ email });
+
+  if (existEmail) throw new ApiError(400, "fail", "Email already exist");
+  const user = await User.create(req.body);
+  const createdUser = await User.findById(user._id).select("-password -__v");
+  res.status(201).json(new ApiResponse(201, "success", createdUser));
+});
+
+// login controller
+const login = asynHandler(async (req, res) => {
+  const error = validate("login", req.body);
+  if (error) throw new ApiError(400, "fail", error);
+
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) throw new ApiError(400, "fail", "User doesn't exist");
+  const isPasswordValid = await user.isPasswordValid(password);
+  if (!isPasswordValid)
+    throw new ApiError(400, "fail", "Incorrect Credentials");
+  const accessToken = await generateAccessToken(user._id);
+  const loggedUser = await User.findById(user._id).select("-password -__v");
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .json(new ApiResponse(200, "success", loggedUser));
+});
+
+const logout = () => {
+  //logic
+};
+
+export { signup, login, logout };
