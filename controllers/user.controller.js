@@ -2,7 +2,7 @@ import validate from "../utils/validate.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
-import asynHandler from "../utils/asyncHandler.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
 //generate access Token
 const generateAccessToken = async (userId) => {
@@ -12,7 +12,7 @@ const generateAccessToken = async (userId) => {
 };
 
 // Sign up controller
-const signup = asynHandler(async (req, res) => {
+const signup = asyncHandler(async (req, res) => {
   const error = validate("signup", req.body);
   if (error) throw new ApiError(400, "fail", error);
 
@@ -26,7 +26,7 @@ const signup = asynHandler(async (req, res) => {
 });
 
 // login controller
-const login = asynHandler(async (req, res) => {
+const login = asyncHandler(async (req, res) => {
   const error = validate("login", req.body);
   if (error) throw new ApiError(400, "fail", error);
 
@@ -49,8 +49,15 @@ const login = asynHandler(async (req, res) => {
     .json(new ApiResponse(200, "success", loggedUser));
 });
 
-const logout = () => {
-  //logic
+const logout = (req, res) => {
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .json(new ApiResponse(200, "success", req.user));
 };
 
 export { signup, login, logout };

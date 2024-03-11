@@ -1,5 +1,5 @@
-const asynHandler = (asyncFn) => (req, res, next) => {
-  asyncFn(req, res).catch((err) => next(err));
+const asyncHandler = (asyncFn) => (req, res, next) => {
+  asyncFn(req, res, next).catch((err) => next(err));
 };
 
-export default asynHandler;
+export default asyncHandler;
