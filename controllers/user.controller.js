@@ -34,8 +34,7 @@ const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) throw new ApiError(400, "fail", "User doesn't exist");
   const isPasswordValid = await user.isPasswordValid(password);
-  if (!isPasswordValid)
-    throw new ApiError(400, "fail", "Incorrect Credentials");
+  if (!isPasswordValid) throw new ApiError(400, "fail", "Incorrect password");
   const accessToken = await generateAccessToken(user._id);
   const loggedUser = await User.findById(user._id).select("-password -__v");
 

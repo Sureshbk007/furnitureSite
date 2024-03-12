@@ -8,4 +8,5 @@ router.post("/login", login);
 
 //secure routes
 router.post("/logout", auth, logout);
+
 export default router;
