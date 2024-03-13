@@ -48,6 +48,7 @@ const login = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "success", loggedUser));
 });
 
+// logout
 const logout = (req, res) => {
   const options = {
     httpOnly: true,

@@ -1,16 +1,8 @@
 import { Product } from "../models/product.model.js";
-import { Category } from "../models/category.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 
-// Get all products
-const getAllProducts = asyncHandler(async (req, res) => {
-  const productList = await Product.find();
-  res.status(200).json(new ApiResponse(200, "success", productList));
-});
-
-// insert product
+// Insert product
 const createProduct = asyncHandler(async (req, res) => {
   const { name, description, category, variants } = req.body;
 
@@ -24,28 +16,52 @@ const createProduct = asyncHandler(async (req, res) => {
     name,
     description,
     category,
-    variants: [
-      {
-        size: "M",
-        inventory: 5,
-        price: variants,
-        material: "wood",
-        color: "red",
-      },
-    ],
+    variants,
     images,
   });
   res.status(200).json(new ApiResponse(200, "success", product));
 });
 
-// create category
-const createCategory = asyncHandler(async (req, res) => {
-  const { name } = req.body;
-
-  const category = await Category.create({
-    name,
-  });
-  res.status(200).json(new ApiResponse(200, "success", category));
+// Get all products
+const getAllProducts = asyncHandler(async (req, res) => {
+  const productList = await Product.find();
+  res.status(200).json(new ApiResponse(200, "success", productList));
 });
 
-export { getAllProducts, createProduct, createCategory };
+//Get single product
+const getProduct = asyncHandler(async (req, res) => {
+  const _id = req.params.id;
+  const product = await Product.findOne({ _id });
+  res.status(200).json(new ApiResponse(200, "success", product));
+});
+
+// Delete a product
+const deleteProduct = asyncHandler(async (req, res) => {
+  const _id = req.params.id;
+  const deletedProduct = await Product.findByIdAndDelete({ _id });
+  res.status(200).json(new ApiResponse(200, "success", deletedProduct));
+});
+
+//Update a product
+const updateProduct = asyncHandler(async (req, res) => {
+  const _id = req.params.id;
+  const updatedProduct = await Product.findByIdAndUpdate({ _id }, req.body, {
+    new: true,
+  });
+  res.status(200).json(new ApiResponse(200, "success", updatedProduct));
+});
+
+//Search products
+const searchProducts = asyncHandler(async (req, res) => {
+  const searchTerm = req.query.q;
+  const searchedProducts = await Product.find({ name: searchTerm });
+  res.status(200).json(new ApiResponse(200, "success", searchedProducts));
+});
+export {
+  getAllProducts,
+  createProduct,
+  getProduct,
+  deleteProduct,
+  updateProduct,
+  searchProducts,
+};
