@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-function connectMongoDB(url, databaseName) {
-  return mongoose.connect(`${url}/${databaseName}`);
+function connectMongoDB(url) {
+  return mongoose.connect(`${url}`);
 }
 export default connectMongoDB;

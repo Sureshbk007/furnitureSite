@@ -2,9 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import app from "./app.js";
 import connectMongoDB from "./db/index.js";
-import { databaseName } from "./constants.js";
 
-connectMongoDB(process.env.MONGODB_URI, databaseName)
+connectMongoDB(process.env.MONGODB_URI)
   .then((data) => {
     console.log("Database Connected! Host: ", data.connection.host);
 
