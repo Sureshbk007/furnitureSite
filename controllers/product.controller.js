@@ -1,6 +1,7 @@
 import { Product } from "../models/product.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 // Insert product
 const createProduct = asyncHandler(async (req, res) => {
@@ -9,7 +10,10 @@ const createProduct = asyncHandler(async (req, res) => {
   const images = [];
   for (let image in req.files) {
     let imagePath = req.files[image][0].path;
-    images.push(imagePath);
+    if (imagePath) {
+      let cloudImg = await uploadOnCloudinary(imagePath);
+      images.push(cloudImg.url);
+    }
   }
 
   const product = await Product.create({
