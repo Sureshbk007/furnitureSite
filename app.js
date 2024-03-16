@@ -12,19 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "16KB" }));
 app.use(cookieParser({ limit: "16KB" }));
-app.use(cors({ origin: process.env.CORS_ORIGIN }));
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET,HEAD, OPTIONS, POST, PUT, DELETE, PATCH"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-required-With, Content-Type, Accept, Authorization"
-  );
-  next();
-});
+app.use(cors());
 
 // routes
 app.use("/api/v1/user", userRouter);
