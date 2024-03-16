@@ -3,10 +3,10 @@ import { login, logout, signup } from "../controllers/user.controller.js";
 import { auth } from "../middlewares/auth.middleware.js";
 const router = express.Router();
 
-router.post("/signup", signup);
-router.post("/login", login);
+router.route("/signup").post(signup);
+router.route("/login").post(login);
 
 //secure routes
-router.post("/logout", auth, logout);
+router.route("/logout").post(auth, logout);
 
 export default router;
