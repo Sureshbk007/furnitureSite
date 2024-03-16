@@ -15,4 +15,9 @@ const createCategory = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, "success", category));
 });
 
-export { createCategory };
+//Get category
+const getCategory = asyncHandler(async (req, res) => {
+  const category = await Category.find();
+  res.status(200).json(new ApiResponse(200, "success", category));
+});
+export { createCategory, getCategory };

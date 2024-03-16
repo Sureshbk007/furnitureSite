@@ -8,6 +8,7 @@ import {
   searchProducts,
   updateProduct,
 } from "../controllers/product.controller.js";
+import { auth } from "../middlewares/auth.middleware.js";
 const router = express.Router();
 
 router.route("/search").get(searchProducts);
@@ -15,6 +16,7 @@ router
   .route("/")
   .get(getAllProducts)
   .post(
+    auth,
     upload.fields([
       {
         name: "productImg1",
@@ -35,6 +37,10 @@ router
     ]),
     createProduct
   );
-router.route("/:id").get(getProduct).patch(updateProduct).delete(deleteProduct);
+router
+  .route("/:id")
+  .get(getProduct)
+  .patch(auth, updateProduct)
+  .delete(auth, deleteProduct);
 
 export default router;
